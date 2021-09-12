@@ -3,3 +3,5 @@ DataSet*
 docs/*.docx
 models.zip
 models/
+nohup.out
+.ipynb_checkpoints

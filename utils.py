@@ -132,12 +132,16 @@ def npa_highlight(doc_path, factors=None, path=None):
         factors = parsed_expertise[2]
     else:
         npa = docx.Document(doc_path)
-    for p in npa.paragraphs:
+
+    used_points = set()
+    for p in reversed(npa.paragraphs):
         for f in factors:
-            if re.match(f'^{re.escape(f[2])}[\s\tА-Я]', p.text):
+            point = re.match(f'^{re.escape(f[2])}[\s\tА-Я]', p.text)
+            if point and point.group(0).strip() not in used_points:
                 p.text += f'({f[0]}_{",".join(f[1])})'
                 for run in p.runs:
                     run.font.highlight_color = WD_COLOR_INDEX.YELLOW
+                used_points.add(point.group(0).strip())
     if path is None:
         path = 'npa_highlighted.docx'
     npa.save(path)
